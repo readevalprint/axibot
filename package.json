@@ -16,13 +16,14 @@
   },
   "dependencies": {
     "normalize.css": "^5.0.0",
-    "vue": "^2.1.6"
+    "vue": "^2.1.6",
+    "webpack-cli": "^3.3.10"
   },
   "devDependencies": {
     "css-loader": "^0.26.1",
     "node-sass": "^4.1.1",
     "sass-loader": "^4.1.1",
     "style-loader": "^0.13.1",
-    "webpack": "^2.1.0-beta.25"
+    "webpack": "^2.7.0"
   }
 }

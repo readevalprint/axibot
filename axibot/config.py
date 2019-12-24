@@ -3,8 +3,8 @@ from __future__ import (absolute_import, division, print_function,
 MAX_RETRIES = 100
 
 # These are unitless timing values used by the EBB.
-SERVO_MIN = 7500
-SERVO_MAX = 28000
+SERVO_MIN = 20000
+SERVO_MAX = 12000
 
 # Default
 SERVO_SPEED = 150
