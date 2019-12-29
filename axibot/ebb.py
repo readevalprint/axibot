@@ -350,7 +350,7 @@ class EiBotBoard(EiBotBase):
         path_alt = parse_path(path)
         xmin, xmax, ymin, ymax = bbox
         for p in path_alt.continuous_subpaths():
-            steps = np.linspace(0, 100, max(2, p.length() / resolution)) / 100
+            steps = np.linspace(0, 100, max(2, int(p.length() / resolution))) / 100
             cmds = []
             for s in steps:
                 px, py = percenter(
