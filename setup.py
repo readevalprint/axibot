@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='axibot',
-      version='0.0.4.dev',
+      version='0.0.5.dev',
       description='Software for AxiDraw pen plotting robot',
       long_description='',
       classifiers=[

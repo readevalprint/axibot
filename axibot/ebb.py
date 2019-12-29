@@ -23,6 +23,8 @@ def percenter(coord1, coord2, coord3):
 class EiBotException(Exception):
     pass
 
+swirl = [{'down': 2}, {'left': 2}, {'up': 2}, {'right': 2}]
+
 
 class EiBotBase:
     def do(self, move):
@@ -40,7 +42,98 @@ class EiBotBoard(EiBotBase):
         self.serial = ser
         self.colors = {}
         self.workarea = {"top": 0, "left": 0, "bottom": 5375, "right": 3750}
-        self.canvas = {"top": 1000, "left": 500, "bottom": 3000, "right": 2500}
+        self.canvas = {'top': 5375-(3750+100), 'left': 100, 'bottom': 5375-100, 'right': 3750-100}
+        self.colors = {
+            "purple": [
+                {"x": 15, "y": 5, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "pink": [
+                {"x": 15, "y": 15, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "blue": [
+                {"x": 25, "y": 5, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "rinse": [
+                {"x": 90, "y": 10, "pen_start": 100, "pen_end": 20, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"left": 20, "pen_start": 60, "pen_end": 100},
+            ],
+            "black": [
+                {"x": 5, "y": 5, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "yellow": [
+                {"x": 45, "y": 15, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "orange": [
+                {"x": 35, "y": 15, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+            "red": [
+                {"x": 45, "y": 15, "pen_start": 100, "pen_end": 70, "area": "workarea"},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"down": 2},
+                {"left": 2},
+                {"up": 2},
+                {"right": 2},
+                {"y": 10, "pen_start": 80, "pen_end": 100},
+            ],
+        }
+
         self.reset()
 
     def reset(self):
@@ -114,7 +207,7 @@ class EiBotBoard(EiBotBase):
         while not resp.strip().startswith(b"OK"):
             attemps += 1
             resp += self.robust_readline().strip()
-            #print("response:", resp)
+            # print("response:", resp)
             if attemps > 3:
                 raise EiBotException(
                     "Unexpected response from EBB:\n"
@@ -299,7 +392,7 @@ class EiBotBoard(EiBotBase):
         self.STATE["y"] -= rel_y
 
         dist = int((rel_x ** 2 + rel_y ** 2) ** 0.5)
-        #print("move", x_steps, y_steps, "dist:", dist)
+        # print("move", x_steps, y_steps, "dist:", dist)
         if dist:
             self.STATE["distance"] += dist
             if self.STATE["pen_pct"] < 100:
@@ -340,7 +433,7 @@ class EiBotBoard(EiBotBase):
             last_c = c
             if color and self.STATE["color_distance"] > max_color_distance:
                 print("refilling:", color, self.STATE["color_distance"])
-                self.get_color(color, _return = True)
+                self.get_color(color, _return=True)
 
     def draw_svg_path(
         self, path, bbox=None, color=None, max_color_distance=1000, resolution=1
@@ -368,7 +461,9 @@ class EiBotBoard(EiBotBase):
             print("DRAWING:", cmds)
             self.draw_line(cmds, color=color, max_color_distance=max_color_distance)
 
-    def draw_stroke_data(self, stroke_data, bbox, max_color_distance=1000, resolution=1):
+    def draw_stroke_data(
+        self, stroke_data, bbox, max_color_distance=1000, resolution=1
+    ):
         xmin, xmax, ymin, ymax = bbox
         for stroke in stroke_data:
             cmds = []
@@ -385,7 +480,9 @@ class EiBotBoard(EiBotBase):
                 cmds[0]["pen_end"] = 0
             print("DRAWING:", cmds)
 
-            self.draw_line(cmds, color=stroke['color'], max_color_distance=max_color_distance)
+            self.draw_line(
+                cmds, color=stroke["color"], max_color_distance=max_color_distance
+            )
 
 
 class MockEiBotBoard(EiBotBase):
